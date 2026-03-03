@@ -1,0 +1,17 @@
+# Compiled binary
+myserver
+*.exe
+
+# IDE files
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Mentor tracking files (not part of the project source)
+MENTOR_PROMPT.md
+AI_LEVERAGE_STRATEGY.md
+STUDENT_PROFILE.md
+ROADMAP.md
