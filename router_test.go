@@ -334,11 +334,6 @@ func TestFullMiddlewareStackIntegration(t *testing.T) {
 	// Pass the request through the ENTIRE stack
 	stack.ServeHTTP(rec, req)
 
-	// ==========================================
-	// 3. YOUR TURN: ASSERTION PHASE
-	// Write the checks for the following:
-	// ==========================================
-
 	// Check 1: Did the handler run? (Check that rec.Body.String() == "integration-success")
 	if rec.Body.String() == "integration-success" {
 		t.Logf("Passed! handler runs sucessfully go 'integration-success' j")
@@ -357,6 +352,6 @@ func TestFullMiddlewareStackIntegration(t *testing.T) {
 	if rec.Header().Values("X-Request-ID") != nil {
 		t.Logf("Passed! the RequestId middleware is running expected X-Request-ID got ID")
 	} else {
-		t.Errorf("Failed! the RequestId middleware is not running expected X-Request-ID but it's empty")
+		t.Errorf("Failed! the RequestId middleware is not running expected X-Request-ID but it's empty.")
 	}
 }
