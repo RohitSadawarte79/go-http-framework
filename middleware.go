@@ -6,9 +6,11 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/RohitSadawarte79/go-http-framework/internal/domain"
 )
 
-const requestId contextKey = "requestId"
+const requestId domain.ContextKey = "requestId"
 
 type Middleware func(http.Handler) http.Handler
 

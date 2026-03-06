@@ -5,11 +5,9 @@ import (
 	"net/http"
 	"slices"
 	"strings"
+
+	"github.com/RohitSadawarte79/go-http-framework/internal/domain"
 )
-
-type contextKey string
-
-const paramsKey contextKey = "params"
 
 type Router struct {
 	routes []route
@@ -128,7 +126,7 @@ and then handler assosiated with it will be called whenever this form of request
 */
 
 func URLParam(r *http.Request, name string) string {
-	params, ok := r.Context().Value(paramsKey).(map[string]string)
+	params, ok := r.Context().Value(domain.ParamKey).(map[string]string)
 
 	if !ok {
 		return ""
@@ -207,7 +205,7 @@ func (rt *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if route.method == r.Method {
 				params := parseParams(route.segments, requested)
 
-				ctx := context.WithValue(r.Context(), paramsKey, params)
+				ctx := context.WithValue(r.Context(), domain.ParamKey, params)
 
 				r = r.WithContext(ctx)
 

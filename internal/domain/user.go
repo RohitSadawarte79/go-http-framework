@@ -2,6 +2,10 @@ package domain
 
 import "errors"
 
+type ContextKey string
+
+const ParamKey ContextKey = "params"
+
 type User struct {
 	ID        int
 	FirstName string
