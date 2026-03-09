@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/RohitSadawarte79/go-http-framework/internal/config"
 	"github.com/RohitSadawarte79/go-http-framework/internal/handler"
 	"github.com/RohitSadawarte79/go-http-framework/internal/repository"
 	"github.com/RohitSadawarte79/go-http-framework/internal/service"
@@ -22,10 +23,15 @@ func main() {
 	router.HandleFunc("POST", "/user", userHandler.Create)
 	router.HandleFunc("GET", "/user/:id", userHandler.GetByID)
 
+	cfg := config.Load()
+	allowedOrgins := make(map[string]bool)
+
+	for _, origins := range cfg.AllowedOrgins {
+		allowedOrgins[origins] = true
+	}
+
 	corsConfig := CORSConfig{
-		AllowedOrigins: map[string]bool{
-			"http://localhost:3000": true,
-		},
+		AllowedOrigins: allowedOrgins,
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"Content-Type", "Authorization"},
 	}
@@ -34,8 +40,8 @@ func main() {
 
 	stack := Chain(corsMiddleware, Recovery, Logger, RequestId)(router)
 
-	fmt.Println("Listening on port 8080:", "http://localhost:8080")
-	err := http.ListenAndServe(":8080", stack)
+	fmt.Println("Listening on port ", cfg.Port, " http://localhost:", cfg.Port)
+	err := http.ListenAndServe(":"+cfg.Port, stack)
 
 	if err != nil {
 		fmt.Println("Error starting server:", err)

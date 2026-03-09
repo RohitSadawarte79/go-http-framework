@@ -24,6 +24,10 @@ func (s *UserService) List() ([]*domain.User, error) {
 	return s.repo.FindAll()
 }
 
+func (s *UserService) GetByEmail(email string) (*domain.User, error) {
+	return s.repo.FindByEmail(email)
+}
+
 func (s *UserService) Create(user *domain.User) error {
 	if user.FirstName == "" || user.LastName == "" {
 		return ErrValidation

@@ -2,11 +2,13 @@ package repository
 
 import (
 	"sort"
+	"sync"
 
 	"github.com/RohitSadawarte79/go-http-framework/internal/domain"
 )
 
 type MemoryUserRepository struct {
+	mu    sync.RWMutex
 	users map[int]*domain.User
 }
 
@@ -17,6 +19,8 @@ func NewMemoryUserRepository() *MemoryUserRepository {
 }
 
 func (r *MemoryUserRepository) FindByID(id int) (*domain.User, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	user, ok := r.users[id]
 
 	if !ok {
@@ -27,6 +31,8 @@ func (r *MemoryUserRepository) FindByID(id int) (*domain.User, error) {
 }
 
 func (r *MemoryUserRepository) FindAll() ([]*domain.User, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	var usersList []*domain.User
 
 	for _, user := range r.users {
@@ -41,6 +47,21 @@ func (r *MemoryUserRepository) FindAll() ([]*domain.User, error) {
 }
 
 func (r *MemoryUserRepository) Create(user *domain.User) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
 	r.users[user.ID] = user
 	return nil
+}
+
+func (r *MemoryUserRepository) FindByEmail(email string) (*domain.User, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	for _, user := range r.users {
+		if user.Email == email {
+			return user, nil
+		}
+	}
+
+	return nil, domain.ErrUserNotFound
 }
