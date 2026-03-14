@@ -3,13 +3,15 @@ package repository
 import (
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/RohitSadawarte79/go-http-framework/internal/domain"
 )
 
 type MemoryUserRepository struct {
-	mu    sync.RWMutex
-	users map[int]*domain.User
+	mu      sync.RWMutex
+	users   map[int]*domain.User
+	counter int
 }
 
 func NewMemoryUserRepository() *MemoryUserRepository {
@@ -49,6 +51,9 @@ func (r *MemoryUserRepository) FindAll() ([]*domain.User, error) {
 func (r *MemoryUserRepository) Create(user *domain.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
+	r.counter++
+	user.ID = r.counter
+	user.CreatedAt = time.Now()
 	r.users[user.ID] = user
 	return nil
 }
